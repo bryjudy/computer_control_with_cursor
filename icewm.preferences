@@ -1,0 +1,12 @@
+WorkspaceNames=" 1 "
+ShowTaskBar=0
+TaskBarAutoHide=1
+TaskBarShowWorkspaces=0
+TaskBarShowWindows=0
+TaskBarShowClock=0
+TaskBarShowMailboxStatus=0
+TaskBarShowCPUStatus=0
+TaskBarShowNetStatus=0
+TaskBarShowMEMStatus=0
+DesktopBackgroundCenter=1
+DesktopBackgroundColor="rgb(0,0,0)"
