@@ -1,0 +1,17 @@
+
+services:
+  computer-control:
+    image: ghcr.io/anthropics/anthropic-quickstarts:computer-use-demo-latest
+    environment:
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - WIDTH=1024
+      - HEIGHT=768
+    ports:
+      - "5900:5900"
+      - "8501:8501"
+      - "6080:6080"
+      - "8080:8080"
+      - "8081:8081"
+      - "8082:8082"
+    volumes:
+      - ~/.anthropic:/home/computeruse/.anthropic

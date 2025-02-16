@@ -12,7 +12,7 @@ This project provides a Docker container with a virtual desktop environment acce
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/agentbryce2025/computer_control_with_cursor.git
+git clone https://github.com/bryjudy/computer_control_with_cursor
 cd computer_control_with_cursor
 ```
 
@@ -23,16 +23,22 @@ docker build -t computer-control-cursor .
 
 3. Run the container:
 ```bash
-docker run -d \
-  --name computer-control \
+ docker run \                             
+  -e ANTHROPIC_API_KEY="$ANTHROPIC_API_KEY" \
+  -v "$HOME/.anthropic:/home/computeruse/.anthropic" \
+  -p 5900:5900 \
+  -p 8501:8501 \
+  -p 6080:6080 \
   -p 8080:8080 \
   --shm-size=1g \
+  -it \
+  --name computer-control-cursor \
   computer-control-cursor
 ```
 
 4. Access the virtual desktop:
    - Open your web browser
-   - Navigate to `http://localhost:8080`
+   - Navigate to `http://localhost:8080/vnc.html`
    - You should see the virtual desktop environment
 
 ## Important Notes
