@@ -24,16 +24,18 @@ docker build -t computer-control-cursor .
 3. Anthropic key then run the container:
 ```bash
  export ANTHROPIC_API_KEY=%your_api_key%
- docker run \                             
+docker run \
+  --name computer-control-cursor \
+  --privileged \
   -e ANTHROPIC_API_KEY="$ANTHROPIC_API_KEY" \
   -v "$HOME/.anthropic:/home/computeruse/.anthropic" \
   -p 5900:5900 \
   -p 8501:8501 \
   -p 6080:6080 \
   -p 8080:8080 \
+  -p 2375:2375 \
   --shm-size=1g \
   -it \
-  --name computer-control-cursor \
   computer-control-cursor
 ```
 

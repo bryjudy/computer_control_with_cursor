@@ -49,17 +49,25 @@ RUN apt-get update && \
     unzip && \
     apt-get clean
 
-# 2. Install noVNC
+# 2. Install noVNC in /opt
 RUN git clone --branch v1.5.0 https://github.com/novnc/noVNC.git /opt/noVNC && \
     git clone --branch v0.12.0 https://github.com/novnc/websockify /opt/noVNC/utils/websockify && \
     ln -s /opt/noVNC/vnc.html /opt/noVNC/index.html && \
     ln -s /opt/noVNC /usr/local/novnc
 
-# 3. Install Docker
+# 3. Install Docker (daemon + CLI) for Docker-in-Docker
 RUN apt-get update && \
     apt-get install -y docker.io && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
+
+# -- Docker-in-Docker configuration --
+# Disables TLS (not recommended for production)
+ENV DOCKER_TLS_CERTDIR=""
+# Docker will listen on the Unix socket by default
+ENV DOCKER_HOST="unix:///var/run/docker.sock"
+# Expose port 2375 if you want to connect externally (insecure)
+EXPOSE 2375
 
 # 4. Create a non-root user
 ENV USERNAME=computeruse
@@ -111,16 +119,16 @@ ENV DISPLAY_NUM=$DISPLAY_NUM
 ENV HEIGHT=$HEIGHT
 ENV WIDTH=$WIDTH
 
-# 11. Cursor script
+# 11. Cursor script (if any)
 RUN chmod +x cursor_installer.sh && \
     ./cursor_installer.sh
 
-# 12. Supervisor config, etc.
+# 12. Supervisor config, etc. (root user to place config in /etc)
 USER root
 RUN cp supervisord.conf /etc/supervisor/conf.d/supervisord.conf && \
     chown -R computeruse:computeruse /home/computeruse
 
-# Remain as root for Supervisor
+# Remain as root for Supervisor + Docker
 WORKDIR /home/computeruse/app
 
 # 13. Environment
@@ -129,8 +137,8 @@ ENV HOME=/home/computeruse \
     DISPLAY=:0.0 \
     RESOLUTION=1024x768
 
-# 14. Expose port(s)
+# 14. Expose ports (noVNC typically on 8080; Docker on 2375 is already exposed above)
 EXPOSE 8080
 
-# 15. Run supervisord
+# 15. Start Supervisor
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
